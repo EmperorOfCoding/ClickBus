@@ -1,0 +1,65 @@
+                                                              Proposta de Projeto
+
+Melhoria da Experiência nos Terminais
+
+ClickBus -- Redução de filas, navegação e acessibilidade
+
+PROBLEMAS IDENTIFICADOS
+
+Filas no Portão de Embarque  Experiência de embarque
+
+· O processo de validação de bilhetes é feito manualmente, gerando lentidão na fila.
+· Passageiros que não compram pelo app ClickBus precisam ir ao guichê, aumentando o
+tempo até o embarque.
+
+Dificuldade de Navegação no  Orientação ao passageiro
+Terminal
+
+· Após a compra pelo app, o passageiro não sabe para onde se dirigir dentro do terminal.
+· Passageiros sem compra online não encontram orientações claras sobre os próximos
+passos.
+
+Falta de Acessibilidade      Inclusão e necessidades especiais
+
+· Passageiros com necessidades especiais não recebem atenção especializada nas
+orientações.
+· A navegação pós-compra no app não contempla recursos de acessibilidade adequados.
+
+SOLUÇÕES PROPOSTAS
+Totem de Autoatendimento no  Resolve: Fila no embarque
+Portão
+
+· Terminais modernos: Check-in digital direto pelo app -- bilhete no celular, sem
+impressão.
+· Terminais intermediários: O totem escaneia o QR Code do app e imprime o bilhete
+físico na hora.
+· Terminais sem infraestrutura: Fluxo atual pelo guichê mantido, mas o app orienta o
+passageiro sobre o que fazer e onde ir.
+· Sem app: O totem aceita CPF ou código de reserva (enviado pela ClickBus) digitado
+manualmente.
+
+Digital Twin -- Navegação    Resolve: Navegação
+Imersiva no Terminal
+
+A ClickBus cria uma réplica digital 3D de cada terminal. O app usa esse modelo para exibir o
+caminho exato do ponto A ao ponto B dentro do espaço real, com realidade aumentada
+sobreposta à câmera do celular. Câmeras distribuídas pelo terminal integradas ao sistema
+permitem visualizar em tempo real onde estão as filas, quais banheiros estão livres e quais
+guichês têm menor tempo de espera.
+
+Expansao futura: Navegação social -- quanto mais usuários no terminal, mais preciso o sistema
+fica, igual ao Waze.
+
+Acessibilidade Completa no App
+                                                                                Resolve: Acessibilidade
+
+e no Totem
+
+   · Interface simplificada para idosos: fluxo reduzido, botões grandes, menos etapas.
+   · Suporte a múltiplos idiomas: atendimento a turistas e regiões de fronteira.
+   · Totem adaptado: altura regulável e botão de acionamento acessível para cadeirantes.
+   · Tecnologias assistivas: compatibilidade com leitores de tela, suporte a Libras e alto
+   contraste.
+
+Documento gerado automaticamente · ClickBus -- Proposta de Projeto
+

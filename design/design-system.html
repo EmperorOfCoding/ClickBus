@@ -1,0 +1,513 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>ClickBus · Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#A528FF;
+    --purple-deep:#6B1FA5;
+    --purple-darker:#4A1372;
+    --magenta:#C04EE0;
+    --ink:#1A1A1A;
+    --ink-soft:#3A3A3F;
+    --muted:#6B6B72;
+    --line:#E8E6EC;
+    --bg:#F4F4F6;
+    --surface:#FFFFFF;
+    --yellow:#FFD400;
+    --radius-lg:24px;
+    --radius-md:16px;
+    --radius-sm:10px;
+    --shadow-sm:0 1px 2px rgba(26,26,26,.04), 0 4px 14px rgba(26,26,26,.06);
+    --shadow-md:0 10px 30px rgba(107,31,165,.12);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:'Inter', system-ui, sans-serif;
+    background:var(--bg); color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{ max-width:1240px; margin:0 auto; padding:64px 48px 96px; }
+  /* Header */
+  .head{
+    display:flex; align-items:flex-end; justify-content:space-between;
+    padding-bottom:32px; margin-bottom:56px; border-bottom:1px solid var(--line);
+  }
+  .head .left{ display:flex; flex-direction:column; gap:18px; }
+  .head .logo{ height:36px; color:var(--ink); }
+  .head .logo svg{ height:100%; width:auto; }
+  .head h1{
+    font-size:42px; font-weight:800; letter-spacing:-.02em; line-height:1.1;
+  }
+  .head h1 .accent{ color:var(--purple); }
+  .head .tagline{ color:var(--muted); font-size:17px; font-weight:500; max-width:480px; }
+  .head .meta{ text-align:right; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:var(--muted); }
+  .head .meta strong{ display:block; color:var(--ink); font-size:14px; margin-top:4px; letter-spacing:.05em; }
+
+  /* Section heading */
+  .sec{ margin-bottom:64px; }
+  .sec-hd{ display:flex; align-items:baseline; gap:14px; margin-bottom:28px; }
+  .sec-hd .n{ font-family:'JetBrains Mono'; color:var(--purple); font-size:13px; font-weight:600; letter-spacing:.1em; }
+  .sec-hd h2{ font-size:28px; font-weight:800; letter-spacing:-.01em; }
+  .sec-hd .dash{ flex:1; height:1px; background:var(--line); }
+
+  /* Color tiles */
+  .colors{ display:grid; grid-template-columns:repeat(3, 1fr); gap:18px; }
+  .color{
+    border-radius:var(--radius-md); padding:24px; min-height:220px;
+    display:flex; flex-direction:column; justify-content:space-between;
+    box-shadow:var(--shadow-sm); border:1px solid transparent;
+  }
+  .color .hex{ font-family:'JetBrains Mono'; font-size:13px; opacity:.8; }
+  .color .name{ font-size:18px; font-weight:800; }
+  .color .role{ font-size:13px; opacity:.8; line-height:1.45; max-width:90%; }
+  .color.light{ background:#fff; color:var(--ink); border-color:var(--line); }
+  .color.light .hex{ color:var(--muted); }
+  .color.light .role{ color:var(--muted); }
+  .color.purple{ background:var(--purple); color:#fff; }
+  .color.deep{ background:var(--purple-deep); color:#fff; }
+  .color.black{ background:var(--ink); color:#fff; }
+  .color.magenta{ background:var(--magenta); color:#fff; }
+  .color.yellow{ background:var(--yellow); color:var(--ink); }
+  .color.gray{ background:var(--bg); color:var(--ink); border-color:var(--line); }
+  .color.gray .hex{ color:var(--muted); }
+  .color.gray .role{ color:var(--muted); }
+  .color.muted-tile{ background:var(--muted); color:#fff; }
+
+  .palette-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .palette-grid .color{ min-height:140px; padding:18px; }
+  .palette-grid .color .name{ font-size:15px; }
+
+  /* Typography */
+  .type-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:32px; box-shadow:var(--shadow-sm);
+  }
+  .type-row{ display:flex; gap:32px; padding:24px 0; border-bottom:1px solid var(--line); align-items:baseline; }
+  .type-row:last-child{ border-bottom:none; }
+  .type-row .label{
+    flex:0 0 200px; font-family:'JetBrains Mono'; font-size:12px; color:var(--muted);
+    letter-spacing:.05em;
+  }
+  .type-row .sample{ flex:1; color:var(--ink); }
+  .display{ font-size:64px; font-weight:800; letter-spacing:-.02em; line-height:1; }
+  .h-1{ font-size:40px; font-weight:800; letter-spacing:-.015em; line-height:1.1; }
+  .h-2{ font-size:28px; font-weight:700; line-height:1.2; }
+  .body-l{ font-size:18px; font-weight:500; line-height:1.55; }
+  .body-s{ font-size:14px; font-weight:400; line-height:1.55; color:var(--ink-soft); }
+  .mono{ font-family:'JetBrains Mono'; font-size:14px; }
+
+  .weights{ display:flex; gap:24px; flex-wrap:wrap; margin-top:24px; padding-top:24px; border-top:1px solid var(--line); }
+  .weights span{ font-size:22px; }
+  .w-400{ font-weight:400; } .w-500{ font-weight:500; } .w-600{ font-weight:600; }
+  .w-700{ font-weight:700; } .w-800{ font-weight:800; } .w-900{ font-weight:900; }
+
+  /* Components */
+  .components{ display:grid; grid-template-columns:repeat(2,1fr); gap:20px; }
+  .comp-card{
+    background:#fff; border:1px solid var(--line); border-radius:var(--radius-md);
+    padding:28px; box-shadow:var(--shadow-sm);
+  }
+  .comp-card .ttl{ font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); letter-spacing:.12em; text-transform:uppercase; margin-bottom:18px; }
+  .btn-row{ display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:12px 22px; border-radius:999px; font-weight:700; font-size:14px;
+    cursor:pointer; border:1px solid transparent; transition:all .2s ease;
+  }
+  .btn-primary{ background:var(--purple); color:#fff; }
+  .btn-primary:hover{ background:var(--purple-deep); }
+  .btn-dark{ background:var(--ink); color:#fff; }
+  .btn-ghost{ background:transparent; color:var(--purple); border-color:var(--purple); }
+
+  .pill{
+    display:inline-flex; align-items:center; gap:8px;
+    padding:6px 14px; border-radius:999px;
+    background:rgba(165,40,255,.1); color:var(--purple);
+    font-size:12px; font-weight:700; letter-spacing:.04em; text-transform:uppercase;
+  }
+  .pill .dot{ width:6px; height:6px; border-radius:50%; background:var(--purple); }
+  .pill.dark{ background:var(--ink); color:#fff; }
+  .pill.dark .dot{ background:var(--yellow); }
+  .pill.warn{ background:#FFF1D6; color:#7A5500; }
+  .pill.warn .dot{ background:#FFB300; }
+
+  /* Card sample (oferta) */
+  .offer-card{
+    background:#fff; border-radius:var(--radius-md); overflow:hidden;
+    border:1px solid var(--line); box-shadow:var(--shadow-sm); max-width:260px;
+  }
+  .offer-card .img{
+    height:140px; background:linear-gradient(135deg, var(--purple) 0%, var(--purple-deep) 100%);
+    position:relative;
+  }
+  .offer-card .img .badge{
+    position:absolute; top:10px; left:10px; padding:6px 10px;
+    background:var(--yellow); color:var(--ink); font-size:10px; font-weight:800;
+    letter-spacing:.1em; text-transform:uppercase; border-radius:6px;
+  }
+  .offer-card .info{ padding:14px 16px; }
+  .offer-card .from{ display:flex; align-items:center; gap:6px; color:var(--muted); font-size:13px; }
+  .offer-card .to{ font-size:17px; font-weight:800; color:var(--ink); margin-top:2px; }
+  .offer-card .price-label{ font-size:11px; color:var(--muted); margin-top:10px; }
+  .offer-card .price{ font-size:24px; font-weight:800; color:var(--ink); letter-spacing:-.02em; }
+  .offer-card .price small{ font-size:14px; font-weight:700; }
+
+  /* Input */
+  .input{
+    display:flex; align-items:center; gap:10px;
+    padding:14px 18px; border:1px solid var(--line); border-radius:14px;
+    background:#fff;
+  }
+  .input svg{ color:var(--purple); width:18px; height:18px; }
+  .input .lbl{ font-size:11px; color:var(--muted); letter-spacing:.06em; text-transform:uppercase; }
+  .input .val{ font-size:14px; font-weight:600; color:var(--ink); }
+
+  /* Icons */
+  .icons{ display:grid; grid-template-columns:repeat(6,1fr); gap:14px; }
+  .ic-cell{
+    background:#fff; border:1px solid var(--line); border-radius:14px;
+    padding:24px 16px; display:flex; flex-direction:column; align-items:center; gap:10px;
+    color:var(--purple);
+  }
+  .ic-cell svg{ width:34px; height:34px; }
+  .ic-cell .ic-lbl{ font-size:11px; color:var(--muted); font-weight:600; letter-spacing:.02em; }
+
+  /* Lockups */
+  .lockups{ display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+  .lock{
+    border-radius:var(--radius-md); padding:36px 24px; min-height:180px;
+    display:flex; align-items:center; justify-content:center;
+    border:1px solid var(--line);
+  }
+  .lock.surface{ background:#fff; }
+  .lock.dark{ background:var(--purple-deep); border-color:var(--purple-deep); }
+  .lock.black{ background:var(--ink); border-color:var(--ink); }
+  .lock svg{ height:36px; width:auto; }
+  .lock .cap{ position:absolute; }
+
+  /* Footer */
+  .foot{
+    margin-top:80px; padding-top:32px; border-top:1px solid var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+    color:var(--muted); font-size:13px;
+  }
+  .foot .small{ font-family:'JetBrains Mono'; font-size:12px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="left">
+      <div class="logo">
+        <svg viewBox="0 0 262 64" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M179.142 56.241v-4.66h9.649c1.646 0 2.535.799 2.535 2.263 0 1.51-.889 2.397-2.535 2.397h-9.649zm-7.471 5.682h18.498c5.293 0 8.852-3.151 8.852-7.679 0-3.151-2.268-5.415-5.693-6.125 2.936-.666 4.625-2.841 4.625-5.904 0-3.728-3.07-6.392-8.673-6.392h-17.609v26.1zm7.471-15.846v-4.66h8.938c1.513 0 2.491.887 2.491 2.352 0 1.509-.978 2.308-2.491 2.308h-8.938zM216.274 62.5c8.849 0 13.476-4.35 13.476-11.807v-14.87h-7.65v14.781c0 3.063-2.267 5.016-5.826 5.016-3.691 0-5.782-1.953-5.782-5.016v-14.78h-7.647v14.869c0 7.457 5.203 11.807 13.429 11.807zm-163.91 0c7.648 0 12.896-4.04 13.385-11.008h-7.693c-.312 2.264-2.18 4.128-5.915 4.128-4.536 0-6.893-2.752-6.893-6.747 0-4.128 2.18-6.791 6.804-6.791 3.736 0 5.692 1.909 6.004 4.261h7.693c-.311-6.214-4.847-11.097-13.874-11.097-8.761 0-14.275 5.194-14.275 13.76 0 8.478 5.87 13.494 14.764 13.494zm195.039 0c8.449 0 12.585-3.24 12.585-8.478 0-4.572-2.934-7.28-9.026-8.078l-2.98-.4c-4.538-.621-6.092-.976-6.092-2.352 0-1.199 1.378-1.998 4.713-1.998 4.091 0 8.316.8 11.43 1.776v-6.037c-2.181-.888-6.095-1.687-10.719-1.687-8.494 0-12.895 3.196-12.895 8.434 0 4.794 3.467 7.146 9.428 8.078l3.156.488c4.046.622 5.424 1.11 5.424 2.264 0 1.11-1.11 2.042-4.535 2.042-4.224 0-8.938-1.11-12.897-2.752v6.347c2.98 1.243 7.294 2.353 12.408 2.353zm-170.714-.577h14.72v-6.347H79.312c-1.335 0-1.913-.577-1.913-1.91V35.824h-7.648V55c0 4.083 2.846 6.924 6.937 6.924zm19.967 0h7.648v-26.1h-7.648v26.1zm26.682.577c7.65 0 12.895-4.04 13.384-11.008h-7.691c-.313 2.264-2.181 4.128-5.916 4.128-4.535 0-6.892-2.752-6.892-6.747 0-4.128 2.178-6.791 6.805-6.791 3.735 0 5.69 1.909 6.003 4.261h7.691c-.31-6.214-4.845-11.097-13.873-11.097-8.762 0-14.276 5.194-14.276 13.76 0 8.478 5.872 13.494 14.765 13.494zm17.743-.577h7.471V53.8c1.691-.577 3.38-1.287 4.937-2.175 2.936 3.462 4.535 6.392 6.003 10.298h8.36c-1.466-4.883-5.114-11.274-8.581-14.426 3.556-3.151 6.224-7.057 7.691-11.674h-7.87c-1.378 4.306-5.424 8.745-10.54 10.875V35.823h-7.471v26.1z"/><path d="M2.29 51.536h25.26c.666 0 1.11-.488 1.11-1.11v-1.109c0-14.514 8.583-22.637 23.793-22.637h94.988c.666 0 1.11-.444 1.11-1.11V1.734c0-.665-.444-1.11-1.11-1.11H47.694C19.856.625.334 17.315.334 41.062c0 3.684.177 6.658.622 9.233.133.754.534 1.242 1.334 1.242z" fill="#A528FF"/></svg>
+      </div>
+      <h1>Design <span class="accent">System</span>.</h1>
+      <p class="tagline">"Viajar muda a gente." — fundamentos visuais extraídos da identidade ClickBus, prontos para uso em apresentações, materiais e campanhas.</p>
+    </div>
+    <div class="meta">
+      Versão · <strong>v1.0 — 2026</strong>
+      <span style="display:block; margin-top:10px;">Documento · <strong>Extração viva</strong></span>
+    </div>
+  </header>
+
+  <!-- 01 — Color Hierarchy -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">01</span>
+      <h2>Color Hierarchy</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="colors">
+      <div class="color purple">
+        <div>
+          <div class="name">Primary Purple</div>
+          <div class="role">Cor da marca. Usada em CTAs, ícones, badges fortes e gradientes da banda hero.</div>
+        </div>
+        <div class="hex">#A528FF</div>
+      </div>
+      <div class="color deep">
+        <div>
+          <div class="name">Deep Purple</div>
+          <div class="role">Profundidade — bandas full-bleed, footers, fundos imersivos e estados pressionados.</div>
+        </div>
+        <div class="hex">#6B1FA5</div>
+      </div>
+      <div class="color black">
+        <div>
+          <div class="name">Brand Black</div>
+          <div class="role">Texto principal e CTAs neutros (ex.: "Conhecer empresas"). Cor do wordmark.</div>
+        </div>
+        <div class="hex">#1A1A1A</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 02 — Extended Palette -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">02</span>
+      <h2>Extended Palette</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="palette-grid">
+      <div class="color magenta">
+        <div>
+          <div class="name">Magenta Accent</div>
+          <div class="role">Variante alegre — cards promocionais, cashback.</div>
+        </div>
+        <div class="hex">#C04EE0</div>
+      </div>
+      <div class="color yellow">
+        <div>
+          <div class="name">Highlight</div>
+          <div class="role">Badges de oferta, destaques pontuais.</div>
+        </div>
+        <div class="hex">#FFD400</div>
+      </div>
+      <div class="color light">
+        <div>
+          <div class="name">Surface White</div>
+          <div class="role">Cards, painéis, conteúdo principal.</div>
+        </div>
+        <div class="hex">#FFFFFF</div>
+      </div>
+      <div class="color gray">
+        <div>
+          <div class="name">Off-white BG</div>
+          <div class="role">Fundo de página, separação suave.</div>
+        </div>
+        <div class="hex">#F4F4F6</div>
+      </div>
+      <div class="color muted-tile">
+        <div>
+          <div class="name">Muted Gray</div>
+          <div class="role">Texto secundário, metadados, labels.</div>
+        </div>
+        <div class="hex">#6B6B72</div>
+      </div>
+      <div class="color light" style="border-color:#E8E6EC;">
+        <div>
+          <div class="name">Line</div>
+          <div class="role">Borda sutil entre cards e seções.</div>
+        </div>
+        <div class="hex">#E8E6EC</div>
+      </div>
+      <div class="color" style="background:#FFF1D6; color:#7A5500;">
+        <div>
+          <div class="name">Warning Tint</div>
+          <div class="role" style="color:#7A5500;">Pílulas de alerta e contexto.</div>
+        </div>
+        <div class="hex" style="color:#7A5500;">#FFF1D6</div>
+      </div>
+      <div class="color" style="background:#4A1372; color:#fff;">
+        <div>
+          <div class="name">Purple Darker</div>
+          <div class="role">Final de gradientes, máxima profundidade.</div>
+        </div>
+        <div class="hex">#4A1372</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 03 — Typography -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">03</span>
+      <h2>Typography</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="type-card">
+      <div class="type-row">
+        <div class="label">Display · Inter 800</div>
+        <div class="sample"><span class="display">Viajar muda a gente.</span></div>
+      </div>
+      <div class="type-row">
+        <div class="label">Heading 1 · Inter 800</div>
+        <div class="sample"><span class="h-1">Melhoria da experiência nos terminais</span></div>
+      </div>
+      <div class="type-row">
+        <div class="label">Heading 2 · Inter 700</div>
+        <div class="sample"><span class="h-2">Digital Twin — Navegação imersiva no terminal</span></div>
+      </div>
+      <div class="type-row">
+        <div class="label">Body L · Inter 500</div>
+        <div class="sample"><span class="body-l">A ClickBus cria uma réplica digital 3D de cada terminal e usa esse modelo para exibir o caminho exato dentro do espaço real.</span></div>
+      </div>
+      <div class="type-row">
+        <div class="label">Body S · Inter 400</div>
+        <div class="sample"><span class="body-s">Câmeras distribuídas pelo terminal permitem visualizar em tempo real onde estão as filas, quais banheiros estão livres e quais guichês têm menor tempo de espera.</span></div>
+      </div>
+      <div class="type-row">
+        <div class="label">Mono · JetBrains Mono</div>
+        <div class="sample"><span class="mono">#A528FF · clickbus.com.br · v1.0</span></div>
+      </div>
+      <div class="weights">
+        <span class="w-400">Regular 400</span>
+        <span class="w-500">Medium 500</span>
+        <span class="w-600">Semibold 600</span>
+        <span class="w-700">Bold 700</span>
+        <span class="w-800">Extrabold 800</span>
+        <span class="w-900">Black 900</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 04 — Components -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">04</span>
+      <h2>Components</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="components">
+      <div class="comp-card">
+        <div class="ttl">Buttons</div>
+        <div class="btn-row">
+          <button class="btn btn-primary">Buscar</button>
+          <button class="btn btn-dark">Conhecer empresas</button>
+          <button class="btn btn-ghost">Acessar mais</button>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="ttl">Badges &amp; Pills</div>
+        <div class="btn-row">
+          <span class="pill"><span class="dot"></span> Click Oferta</span>
+          <span class="pill dark"><span class="dot"></span> Cashback</span>
+          <span class="pill warn"><span class="dot"></span> Impacta</span>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="ttl">Offer Card</div>
+        <div class="offer-card">
+          <div class="img">
+            <span class="badge">% Click Oferta</span>
+          </div>
+          <div class="info">
+            <div class="from">📍 Salvador, BA</div>
+            <div class="to">Jacobina, BA</div>
+            <div class="price-label">A partir de</div>
+            <div class="price">100<small>,99</small></div>
+          </div>
+        </div>
+      </div>
+      <div class="comp-card">
+        <div class="ttl">Inputs</div>
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <div class="input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <div class="lbl">Origem</div>
+              <div class="val">De onde você vai sair?</div>
+            </div>
+          </div>
+          <div class="input">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div>
+              <div class="lbl">Destino</div>
+              <div class="val">Para onde você vai?</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 05 — Icon set -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">05</span>
+      <h2>Icon Set</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="icons">
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="3"/><path d="M3 21v-3a3 3 0 0 1 3-3h0a3 3 0 0 1 3 3v3"/><circle cx="12" cy="6" r="3"/><circle cx="18" cy="6" r="3"/></svg>
+        <span class="ic-lbl">Fila / Pessoas</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        <span class="ic-lbl">Mapa / Pin</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="4" r="2"/><path d="M19 13v-2a8 8 0 1 0-16 0v2"/><path d="M12 12v6"/><path d="M9 18h6l1 3"/></svg>
+        <span class="ic-lbl">Acessibilidade</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="3" width="12" height="18" rx="2"/><path d="M10 7h4"/><path d="M9 21h6"/></svg>
+        <span class="ic-lbl">Totem</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="ic-lbl">Câmera / AR</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15 15 0 0 1 0 20"/><path d="M12 2a15 15 0 0 0 0 20"/></svg>
+        <span class="ic-lbl">Idiomas</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+        <span class="ic-lbl">Tempo</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 7.4H22l-6.2 4.5L18.2 22 12 17.5 5.8 22l2.4-8.1L2 9.4h7.6L12 2Z"/></svg>
+        <span class="ic-lbl">Premium</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4"/><path d="M12 17h.01"/><path d="m10.29 3.86-8.18 14a2 2 0 0 0 1.71 3h16.36a2 2 0 0 0 1.71-3l-8.18-14a2 2 0 0 0-3.42 0Z"/></svg>
+        <span class="ic-lbl">Alerta</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9 12 3l9 6"/><path d="M5 9v10h14V9"/></svg>
+        <span class="ic-lbl">Terminal</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span class="ic-lbl">Visão</span>
+      </div>
+      <div class="ic-cell">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+        <span class="ic-lbl">Check</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 06 — Lockups -->
+  <section class="sec">
+    <div class="sec-hd">
+      <span class="n">06</span>
+      <h2>Wordmarks &amp; Lockups</h2>
+      <span class="dash"></span>
+    </div>
+    <div class="lockups">
+      <div class="lock surface">
+        <svg viewBox="0 0 262 64" xmlns="http://www.w3.org/2000/svg"><path d="M179.142 56.241v-4.66h9.649c1.646 0 2.535.799 2.535 2.263 0 1.51-.889 2.397-2.535 2.397h-9.649zm-7.471 5.682h18.498c5.293 0 8.852-3.151 8.852-7.679 0-3.151-2.268-5.415-5.693-6.125 2.936-.666 4.625-2.841 4.625-5.904 0-3.728-3.07-6.392-8.673-6.392h-17.609v26.1zm7.471-15.846v-4.66h8.938c1.513 0 2.491.887 2.491 2.352 0 1.509-.978 2.308-2.491 2.308h-8.938zM216.274 62.5c8.849 0 13.476-4.35 13.476-11.807v-14.87h-7.65v14.781c0 3.063-2.267 5.016-5.826 5.016-3.691 0-5.782-1.953-5.782-5.016v-14.78h-7.647v14.869c0 7.457 5.203 11.807 13.429 11.807zm-163.91 0c7.648 0 12.896-4.04 13.385-11.008h-7.693c-.312 2.264-2.18 4.128-5.915 4.128-4.536 0-6.893-2.752-6.893-6.747 0-4.128 2.18-6.791 6.804-6.791 3.736 0 5.692 1.909 6.004 4.261h7.693c-.311-6.214-4.847-11.097-13.874-11.097-8.761 0-14.275 5.194-14.275 13.76 0 8.478 5.87 13.494 14.764 13.494zm195.039 0c8.449 0 12.585-3.24 12.585-8.478 0-4.572-2.934-7.28-9.026-8.078l-2.98-.4c-4.538-.621-6.092-.976-6.092-2.352 0-1.199 1.378-1.998 4.713-1.998 4.091 0 8.316.8 11.43 1.776v-6.037c-2.181-.888-6.095-1.687-10.719-1.687-8.494 0-12.895 3.196-12.895 8.434 0 4.794 3.467 7.146 9.428 8.078l3.156.488c4.046.622 5.424 1.11 5.424 2.264 0 1.11-1.11 2.042-4.535 2.042-4.224 0-8.938-1.11-12.897-2.752v6.347c2.98 1.243 7.294 2.353 12.408 2.353zm-170.714-.577h14.72v-6.347H79.312c-1.335 0-1.913-.577-1.913-1.91V35.824h-7.648V55c0 4.083 2.846 6.924 6.937 6.924zm19.967 0h7.648v-26.1h-7.648v26.1zm26.682.577c7.65 0 12.895-4.04 13.384-11.008h-7.691c-.313 2.264-2.181 4.128-5.916 4.128-4.535 0-6.892-2.752-6.892-6.747 0-4.128 2.178-6.791 6.805-6.791 3.735 0 5.69 1.909 6.003 4.261h7.691c-.31-6.214-4.845-11.097-13.873-11.097-8.762 0-14.276 5.194-14.276 13.76 0 8.478 5.872 13.494 14.765 13.494zm17.743-.577h7.471V53.8c1.691-.577 3.38-1.287 4.937-2.175 2.936 3.462 4.535 6.392 6.003 10.298h8.36c-1.466-4.883-5.114-11.274-8.581-14.426 3.556-3.151 6.224-7.057 7.691-11.674h-7.87c-1.378 4.306-5.424 8.745-10.54 10.875V35.823h-7.471v26.1z" fill="#1A1A1A"/><path d="M2.29 51.536h25.26c.666 0 1.11-.488 1.11-1.11v-1.109c0-14.514 8.583-22.637 23.793-22.637h94.988c.666 0 1.11-.444 1.11-1.11V1.734c0-.665-.444-1.11-1.11-1.11H47.694C19.856.625.334 17.315.334 41.062c0 3.684.177 6.658.622 9.233.133.754.534 1.242 1.334 1.242z" fill="#A528FF"/></svg>
+      </div>
+      <div class="lock dark">
+        <svg viewBox="0 0 262 64" xmlns="http://www.w3.org/2000/svg"><path d="M179.142 56.241v-4.66h9.649c1.646 0 2.535.799 2.535 2.263 0 1.51-.889 2.397-2.535 2.397h-9.649zm-7.471 5.682h18.498c5.293 0 8.852-3.151 8.852-7.679 0-3.151-2.268-5.415-5.693-6.125 2.936-.666 4.625-2.841 4.625-5.904 0-3.728-3.07-6.392-8.673-6.392h-17.609v26.1zm7.471-15.846v-4.66h8.938c1.513 0 2.491.887 2.491 2.352 0 1.509-.978 2.308-2.491 2.308h-8.938zM216.274 62.5c8.849 0 13.476-4.35 13.476-11.807v-14.87h-7.65v14.781c0 3.063-2.267 5.016-5.826 5.016-3.691 0-5.782-1.953-5.782-5.016v-14.78h-7.647v14.869c0 7.457 5.203 11.807 13.429 11.807zm-163.91 0c7.648 0 12.896-4.04 13.385-11.008h-7.693c-.312 2.264-2.18 4.128-5.915 4.128-4.536 0-6.893-2.752-6.893-6.747 0-4.128 2.18-6.791 6.804-6.791 3.736 0 5.692 1.909 6.004 4.261h7.693c-.311-6.214-4.847-11.097-13.874-11.097-8.761 0-14.275 5.194-14.275 13.76 0 8.478 5.87 13.494 14.764 13.494zm195.039 0c8.449 0 12.585-3.24 12.585-8.478 0-4.572-2.934-7.28-9.026-8.078l-2.98-.4c-4.538-.621-6.092-.976-6.092-2.352 0-1.199 1.378-1.998 4.713-1.998 4.091 0 8.316.8 11.43 1.776v-6.037c-2.181-.888-6.095-1.687-10.719-1.687-8.494 0-12.895 3.196-12.895 8.434 0 4.794 3.467 7.146 9.428 8.078l3.156.488c4.046.622 5.424 1.11 5.424 2.264 0 1.11-1.11 2.042-4.535 2.042-4.224 0-8.938-1.11-12.897-2.752v6.347c2.98 1.243 7.294 2.353 12.408 2.353zm-170.714-.577h14.72v-6.347H79.312c-1.335 0-1.913-.577-1.913-1.91V35.824h-7.648V55c0 4.083 2.846 6.924 6.937 6.924zm19.967 0h7.648v-26.1h-7.648v26.1zm26.682.577c7.65 0 12.895-4.04 13.384-11.008h-7.691c-.313 2.264-2.181 4.128-5.916 4.128-4.535 0-6.892-2.752-6.892-6.747 0-4.128 2.178-6.791 6.805-6.791 3.735 0 5.69 1.909 6.003 4.261h7.691c-.31-6.214-4.845-11.097-13.873-11.097-8.762 0-14.276 5.194-14.276 13.76 0 8.478 5.872 13.494 14.765 13.494zm17.743-.577h7.471V53.8c1.691-.577 3.38-1.287 4.937-2.175 2.936 3.462 4.535 6.392 6.003 10.298h8.36c-1.466-4.883-5.114-11.274-8.581-14.426 3.556-3.151 6.224-7.057 7.691-11.674h-7.87c-1.378 4.306-5.424 8.745-10.54 10.875V35.823h-7.471v26.1z" fill="#fff"/><path d="M2.29 51.536h25.26c.666 0 1.11-.488 1.11-1.11v-1.109c0-14.514 8.583-22.637 23.793-22.637h94.988c.666 0 1.11-.444 1.11-1.11V1.734c0-.665-.444-1.11-1.11-1.11H47.694C19.856.625.334 17.315.334 41.062c0 3.684.177 6.658.622 9.233.133.754.534 1.242 1.334 1.242z" fill="#FFD400"/></svg>
+      </div>
+      <div class="lock black">
+        <svg viewBox="0 0 262 64" xmlns="http://www.w3.org/2000/svg"><path d="M179.142 56.241v-4.66h9.649c1.646 0 2.535.799 2.535 2.263 0 1.51-.889 2.397-2.535 2.397h-9.649zm-7.471 5.682h18.498c5.293 0 8.852-3.151 8.852-7.679 0-3.151-2.268-5.415-5.693-6.125 2.936-.666 4.625-2.841 4.625-5.904 0-3.728-3.07-6.392-8.673-6.392h-17.609v26.1zm7.471-15.846v-4.66h8.938c1.513 0 2.491.887 2.491 2.352 0 1.509-.978 2.308-2.491 2.308h-8.938zM216.274 62.5c8.849 0 13.476-4.35 13.476-11.807v-14.87h-7.65v14.781c0 3.063-2.267 5.016-5.826 5.016-3.691 0-5.782-1.953-5.782-5.016v-14.78h-7.647v14.869c0 7.457 5.203 11.807 13.429 11.807zm-163.91 0c7.648 0 12.896-4.04 13.385-11.008h-7.693c-.312 2.264-2.18 4.128-5.915 4.128-4.536 0-6.893-2.752-6.893-6.747 0-4.128 2.18-6.791 6.804-6.791 3.736 0 5.692 1.909 6.004 4.261h7.693c-.311-6.214-4.847-11.097-13.874-11.097-8.761 0-14.275 5.194-14.275 13.76 0 8.478 5.87 13.494 14.764 13.494zm195.039 0c8.449 0 12.585-3.24 12.585-8.478 0-4.572-2.934-7.28-9.026-8.078l-2.98-.4c-4.538-.621-6.092-.976-6.092-2.352 0-1.199 1.378-1.998 4.713-1.998 4.091 0 8.316.8 11.43 1.776v-6.037c-2.181-.888-6.095-1.687-10.719-1.687-8.494 0-12.895 3.196-12.895 8.434 0 4.794 3.467 7.146 9.428 8.078l3.156.488c4.046.622 5.424 1.11 5.424 2.264 0 1.11-1.11 2.042-4.535 2.042-4.224 0-8.938-1.11-12.897-2.752v6.347c2.98 1.243 7.294 2.353 12.408 2.353zm-170.714-.577h14.72v-6.347H79.312c-1.335 0-1.913-.577-1.913-1.91V35.824h-7.648V55c0 4.083 2.846 6.924 6.937 6.924zm19.967 0h7.648v-26.1h-7.648v26.1zm26.682.577c7.65 0 12.895-4.04 13.384-11.008h-7.691c-.313 2.264-2.181 4.128-5.916 4.128-4.535 0-6.892-2.752-6.892-6.747 0-4.128 2.178-6.791 6.805-6.791 3.735 0 5.69 1.909 6.003 4.261h7.691c-.31-6.214-4.845-11.097-13.873-11.097-8.762 0-14.276 5.194-14.276 13.76 0 8.478 5.872 13.494 14.765 13.494zm17.743-.577h7.471V53.8c1.691-.577 3.38-1.287 4.937-2.175 2.936 3.462 4.535 6.392 6.003 10.298h8.36c-1.466-4.883-5.114-11.274-8.581-14.426 3.556-3.151 6.224-7.057 7.691-11.674h-7.87c-1.378 4.306-5.424 8.745-10.54 10.875V35.823h-7.471v26.1z" fill="#fff"/><path d="M2.29 51.536h25.26c.666 0 1.11-.488 1.11-1.11v-1.109c0-14.514 8.583-22.637 23.793-22.637h94.988c.666 0 1.11-.444 1.11-1.11V1.734c0-.665-.444-1.11-1.11-1.11H47.694C19.856.625.334 17.315.334 41.062c0 3.684.177 6.658.622 9.233.133.754.534 1.242 1.334 1.242z" fill="#A528FF"/></svg>
+      </div>
+    </div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:8px;">
+      <div style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); text-align:center; letter-spacing:.05em;">Surface · uso principal</div>
+      <div style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); text-align:center; letter-spacing:.05em;">On purple · marca amarela</div>
+      <div style="font-family:'JetBrains Mono'; font-size:11px; color:var(--muted); text-align:center; letter-spacing:.05em;">On black · alto contraste</div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span class="small">design/design-system.html · ClickBus v1.0 · 2026</span>
+    <span>Companheiro de design para slides.html — apresentação da Proposta de Projeto.</span>
+  </footer>
+
+</div>
+</body>
+</html>
