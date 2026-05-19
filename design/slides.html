@@ -356,12 +356,12 @@
     position:relative; overflow:hidden;
   }
   .s-end .tagbig{
-    font-size:104px; font-weight:900; letter-spacing:-.03em; line-height:1;
+    font-size:96px; font-weight:900; letter-spacing:-.03em; line-height:1.05;
     background:linear-gradient(180deg, #fff 0%, rgba(255,255,255,.6) 100%);
     -webkit-background-clip:text; background-clip:text; color:transparent;
     max-width:1200px;
   }
-  .s-end .sub{ font-size:24px; font-weight:500; margin-top:32px; opacity:.85; max-width:680px; }
+  .s-end .sub{ font-size:24px; font-weight:500; margin-top:56px; opacity:.85; max-width:680px; line-height:1.6; }
   .s-end .sig{ position:absolute; bottom:48px; left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:8px; }
   .s-end .sig .small{ font-size:12px; letter-spacing:.18em; text-transform:uppercase; opacity:.7; }
 
@@ -396,6 +396,158 @@
   }
   .slide-foot.on-dark{ color:rgba(255,255,255,.55); }
   .slide-foot .page{ font-variant-numeric:tabular-nums; }
+
+  /* ==== MagicUI-inspired animations (vanilla CSS port) ==== */
+  /* Spotlight (MagicCard) — gradient follows mouse via --mx/--my */
+  .vcard, .scen, .lead-card, .visual-card, .a11y-card{
+    position:relative; isolation:isolate;
+    transition:transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s ease, border-color .35s ease;
+  }
+  .vcard::before, .scen::before, .lead-card::before, .a11y-card::before{
+    content:""; position:absolute; inset:0; pointer-events:none; z-index:0;
+    border-radius:inherit; opacity:0; transition:opacity .4s ease;
+    background:radial-gradient(420px circle at var(--mx,50%) var(--my,50%),
+      rgba(165,40,255,.16), transparent 55%);
+  }
+  .vcard.dark::before{
+    background:radial-gradient(460px circle at var(--mx,50%) var(--my,50%),
+      rgba(255,255,255,.18), transparent 55%);
+  }
+  .vcard:hover::before, .scen:hover::before,
+  .lead-card:hover::before, .a11y-card:hover::before{ opacity:1; }
+  .vcard > *, .scen > *, .lead-card > *, .visual-card > *, .a11y-card > *{ position:relative; z-index:1; }
+
+  /* Hover lift */
+  .vcard:hover, .a11y-card:hover{
+    transform:translateY(-4px);
+    box-shadow:0 18px 50px rgba(107,31,165,.18);
+    border-color:rgba(165,40,255,.28);
+  }
+  .scen:hover{
+    transform:translateY(-6px) scale(1.015);
+    box-shadow:0 22px 50px rgba(107,31,165,.22);
+    border-color:rgba(165,40,255,.35);
+  }
+  .feat{ transition:transform .25s ease, background .25s ease, border-color .25s ease; }
+  .feat:hover{ transform:translateY(-2px); background:#F3EBFF; border-color:#D9C2F5; }
+
+  /* BorderBeam — rotating conic light around dark cards */
+  .vcard.dark, .visual-card{ overflow:hidden; }
+  .vcard.dark::after, .visual-card::after{
+    content:""; position:absolute; inset:-1px; border-radius:inherit;
+    padding:1.5px; pointer-events:none; z-index:2;
+    background:conic-gradient(from var(--beam-angle,0deg),
+      transparent 0deg, transparent 280deg,
+      rgba(255,212,0,.95) 320deg, rgba(255,255,255,.9) 340deg,
+      rgba(255,212,0,.95) 360deg, transparent 360deg);
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    animation:mui-beam 6s linear infinite;
+    opacity:.85;
+  }
+  @property --beam-angle{ syntax:'<angle>'; initial-value:0deg; inherits:false; }
+  @keyframes mui-beam{ to{ --beam-angle:360deg; } }
+  /* Fallback for browsers without @property — animate via background-position */
+  @supports not (background: conic-gradient(from 0deg, red, red)){
+    .vcard.dark::after, .visual-card::after{ display:none; }
+  }
+
+  /* ShineBorder — subtle gradient sweep on scen + a11y cards */
+  .scen, .a11y-card{ overflow:hidden; }
+  .scen::after, .a11y-card::after{
+    content:""; position:absolute; inset:0; border-radius:inherit;
+    padding:1px; pointer-events:none; z-index:2; opacity:0;
+    background:linear-gradient(120deg,
+      transparent 30%, rgba(165,40,255,.65) 50%, transparent 70%);
+    background-size:200% 100%;
+    -webkit-mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+            mask:linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor; mask-composite:exclude;
+    transition:opacity .35s ease;
+    animation:mui-shine 2.6s linear infinite;
+  }
+  .scen:hover::after, .a11y-card:hover::after{ opacity:1; }
+  @keyframes mui-shine{
+    0%{ background-position:200% 0; }
+    100%{ background-position:-200% 0; }
+  }
+
+  /* BlurFade — entrance on active slide. Children of active slide fade in staggered */
+  .slide.active .vcard,
+  .slide.active .scen,
+  .slide.active .a11y-card,
+  .slide.active .lead-card,
+  .slide.active .visual-card,
+  .slide.active .stat,
+  .slide.active .feat{
+    animation:mui-blur-fade .7s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .slide.active .vcard:nth-child(2),
+  .slide.active .a11y-card:nth-child(2),
+  .slide.active .scen:nth-child(2),
+  .slide.active .stat:nth-child(2),
+  .slide.active .feat:nth-child(2){ animation-delay:.08s; }
+  .slide.active .scen:nth-child(3),
+  .slide.active .a11y-card:nth-child(3),
+  .slide.active .stat:nth-child(3),
+  .slide.active .feat:nth-child(3){ animation-delay:.16s; }
+  .slide.active .scen:nth-child(4),
+  .slide.active .a11y-card:nth-child(4),
+  .slide.active .stat:nth-child(4),
+  .slide.active .feat:nth-child(4){ animation-delay:.24s; }
+  @keyframes mui-blur-fade{
+    0%{ opacity:0; transform:translateY(14px); filter:blur(6px); }
+    100%{ opacity:1; transform:none; filter:blur(0); }
+  }
+
+  /* Visual-card map pin pulse */
+  .map-mock .pin{ animation:mui-pin-pulse 2.4s ease-in-out infinite; }
+  .map-mock .pin.p2{ animation-delay:1.2s; }
+  @keyframes mui-pin-pulse{
+    0%,100%{ box-shadow:0 0 0 6px rgba(255,212,0,.25); }
+    50%{ box-shadow:0 0 0 14px rgba(255,212,0,0); }
+  }
+  .map-mock .pin.p2{ animation-name:mui-pin-pulse-white; }
+  @keyframes mui-pin-pulse-white{
+    0%,100%{ box-shadow:0 0 0 6px rgba(255,255,255,.25); }
+    50%{ box-shadow:0 0 0 14px rgba(255,255,255,0); }
+  }
+
+  /* Number ticker — invisible until JS sets value */
+  .stat .big[data-ticker]{ font-variant-numeric:tabular-nums; }
+
+  /* ── Nav SVG map ── */
+  .nav-svg{ width:100%; height:100%; display:block; }
+  .map-mock{ cursor:default; }
+  #nav-route, .nav-route-ghost{ stroke-dasharray:600; stroke-dashoffset:600; }
+  .nav-wp{ transition:opacity .4s ease; }
+  .nav-scanline{
+    animation:nav-scan 3.5s linear infinite;
+  }
+  @keyframes nav-scan{
+    0%{ transform:translateY(0); }
+    100%{ transform:translateY(400px); }
+  }
+  @keyframes nav-eta-bounce{
+    0%  { transform:scale(1) translateZ(0); }
+    40% { transform:scale(1.18) translateZ(0); }
+    100%{ transform:scale(1) translateZ(0); }
+  }
+  #nav-eta{ transform-origin:50% 50%; transform-box:fill-box; }
+  @media (prefers-reduced-motion: reduce){
+    .nav-scanline{ animation:none; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .vcard, .scen, .lead-card, .visual-card, .a11y-card, .feat{ transition:none; }
+    .vcard.dark::after, .visual-card::after,
+    .scen::after, .a11y-card::after,
+    .map-mock .pin{ animation:none; }
+    .slide.active .vcard, .slide.active .scen, .slide.active .a11y-card,
+    .slide.active .lead-card, .slide.active .visual-card,
+    .slide.active .stat, .slide.active .feat{ animation:none; }
+  }
 
   /* Print: 16:9 landscape */
   @media print{
@@ -462,19 +614,19 @@
           </div>
           <div class="stats">
             <div class="stat">
-              <div class="big">3</div>
+              <div class="big" data-ticker="3">0</div>
               <div class="lbl">problemas críticos identificados nos terminais</div>
             </div>
             <div class="stat">
-              <div class="big">3</div>
+              <div class="big" data-ticker="3">0</div>
               <div class="lbl">soluções integradas para entrega imediata</div>
             </div>
             <div class="stat">
-              <div class="big">+200</div>
+              <div class="big" data-ticker="200" data-prefix="+">+0</div>
               <div class="lbl">empresas de ônibus atendidas pela ClickBus</div>
             </div>
             <div class="stat">
-              <div class="big">4.8k</div>
+              <div class="big" data-ticker="4.8" data-suffix="k" data-decimals="1">0.0k</div>
               <div class="lbl">destinos cobertos no território nacional</div>
             </div>
           </div>
@@ -833,10 +985,140 @@
             <div style="font-size:22px; font-weight:800; margin-top:10px;">Terminal · São Paulo</div>
             <div style="font-size:14px; opacity:.8; margin-top:4px;">Você está aqui · 2 min até o portão 12</div>
           </div>
-          <div class="map-mock">
-            <div class="path"></div>
-            <div class="pin p1">A</div>
-            <div class="pin p2">B</div>
+          <div class="map-mock" id="map-nav">
+            <svg class="nav-svg" viewBox="0 0 360 200" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
+              <defs>
+                <!-- Grid overlay -->
+                <pattern id="nav-grid" width="24" height="24" patternUnits="userSpaceOnUse">
+                  <path d="M 24 0 L 0 0 0 24" fill="none" stroke="rgba(255,255,255,.06)" stroke-width=".8"/>
+                </pattern>
+                <!-- Glow filters -->
+                <filter id="glow-yellow" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="3.5" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="glow-purple" x="-60%" y="-60%" width="220%" height="220%">
+                  <feGaussianBlur stdDeviation="4" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <filter id="glow-soft" x="-80%" y="-80%" width="360%" height="360%">
+                  <feGaussianBlur stdDeviation="6" result="blur"/>
+                  <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                </filter>
+                <!-- Clip path for scan line -->
+                <clipPath id="scan-clip">
+                  <rect x="0" y="0" width="360" height="200"/>
+                </clipPath>
+                <!-- Route path (used for animateMotion) -->
+                <path id="nav-route-def" d="M 30,162 L 30,108 Q 30,96 42,96 L 96,96 Q 108,96 108,84 L 108,56 Q 108,44 120,44 L 192,44 Q 204,44 204,56 L 204,88 Q 204,96 216,96 L 258,96 Q 270,96 270,84 L 270,36 Q 270,28 278,28 L 324,28" fill="none"/>
+              </defs>
+
+              <!-- Background grid -->
+              <rect width="360" height="200" fill="url(#nav-grid)"/>
+
+              <!-- ── Floor plan rooms ── -->
+              <!-- Outer corridor outline -->
+              <rect x="12" y="14" width="336" height="172" rx="8" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1.2"/>
+
+              <!-- Room: Lojas (bottom left) -->
+              <rect x="20" y="120" width="52" height="50" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+              <text x="46" y="148" fill="rgba(255,255,255,.35)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">LOJAS</text>
+              <text x="46" y="158" fill="rgba(255,255,255,.2)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">A-C</text>
+
+              <!-- Room: Banheiro (mid-left) -->
+              <rect x="20" y="60" width="44" height="44" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+              <text x="42" y="82" fill="rgba(255,255,255,.35)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">WC</text>
+              <text x="42" y="91" fill="rgba(255,255,255,.2)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">♿</text>
+
+              <!-- Room: Guichês 1-4 (center) -->
+              <rect x="118" y="52" width="72" height="36" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+              <text x="154" y="69" fill="rgba(255,255,255,.35)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">GUICHÊS</text>
+              <text x="154" y="79" fill="rgba(255,255,255,.2)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">1 — 4</text>
+
+              <!-- Room: Guichê 5-8 (center-right) -->
+              <rect x="210" y="52" width="60" height="36" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+              <text x="240" y="69" fill="rgba(255,255,255,.35)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">GUICHÊS</text>
+              <text x="240" y="79" fill="rgba(255,255,255,.2)" font-size="5.5" font-family="Inter,sans-serif" text-anchor="middle">5 — 8</text>
+
+              <!-- Room: Lanchonete (bottom center) -->
+              <rect x="140" y="126" width="80" height="48" rx="4" fill="rgba(255,255,255,.04)" stroke="rgba(255,255,255,.12)" stroke-width=".8"/>
+              <text x="180" y="152" fill="rgba(255,255,255,.35)" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="600">LANCHONETE</text>
+
+              <!-- Room: Portão 12 (top right — destination) -->
+              <rect x="286" y="14" width="62" height="38" rx="6" fill="rgba(165,40,255,.18)" stroke="rgba(165,40,255,.45)" stroke-width="1.2"/>
+              <text x="317" y="28" fill="rgba(255,255,255,.85)" font-size="7.5" font-family="Inter,sans-serif" text-anchor="middle" font-weight="800">PORTÃO</text>
+              <text x="317" y="40" fill="#FFD400" font-size="10" font-family="Inter,sans-serif" text-anchor="middle" font-weight="900">12</text>
+
+              <!-- ── Animated route path (drawn on) ── -->
+              <path id="nav-route" d="M 30,162 L 30,108 Q 30,96 42,96 L 96,96 Q 108,96 108,84 L 108,56 Q 108,44 120,44 L 192,44 Q 204,44 204,56 L 204,88 Q 204,96 216,96 L 258,96 Q 270,96 270,84 L 270,36 Q 270,28 278,28 L 324,28"
+                fill="none" stroke="#FFD400" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"
+                stroke-dasharray="600" stroke-dashoffset="600"
+                filter="url(#glow-yellow)" opacity=".92"/>
+
+              <!-- Route ghost (dim trail under glow) -->
+              <path d="M 30,162 L 30,108 Q 30,96 42,96 L 96,96 Q 108,96 108,84 L 108,56 Q 108,44 120,44 L 192,44 Q 204,44 204,56 L 204,88 Q 204,96 216,96 L 258,96 Q 270,96 270,84 L 270,36 Q 270,28 278,28 L 324,28"
+                fill="none" stroke="rgba(255,212,0,.18)" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"
+                stroke-dasharray="600" stroke-dashoffset="600"/>
+
+              <!-- ── Waypoint arrows (appear mid-route) ── -->
+              <!-- Arrow up at x=30,y=130 -->
+              <g class="nav-wp nav-wp-1" opacity="0" transform="translate(40,105)">
+                <rect x="-14" y="-9" width="28" height="18" rx="4" fill="rgba(0,0,0,.55)" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+                <text x="0" y="4" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">↑ WC</text>
+              </g>
+              <!-- Arrow right at guiche corridor -->
+              <g class="nav-wp nav-wp-2" opacity="0" transform="translate(108,67)">
+                <rect x="-18" y="-9" width="36" height="18" rx="4" fill="rgba(0,0,0,.55)" stroke="rgba(255,255,255,.2)" stroke-width=".8"/>
+                <text x="0" y="4" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">→ Guichês</text>
+              </g>
+              <!-- Continue arrow mid -->
+              <g class="nav-wp nav-wp-3" opacity="0" transform="translate(200,44)">
+                <rect x="-22" y="-9" width="44" height="18" rx="4" fill="rgba(165,40,255,.7)" stroke="rgba(255,255,255,.25)" stroke-width=".8"/>
+                <text x="0" y="4" fill="#fff" font-size="7" font-family="Inter,sans-serif" text-anchor="middle" font-weight="700">→ Portão 12</text>
+              </g>
+
+              <!-- ── Traveler dot ── -->
+              <circle id="nav-dot" r="0" fill="#FFD400" filter="url(#glow-soft)" opacity="0">
+                <animateMotion id="nav-motion" dur="4s" begin="indefinite" fill="freeze" calcMode="spline"
+                  keyTimes="0;.15;.38;.62;.82;1"
+                  keySplines=".4,0,.2,1; .4,0,.2,1; .4,0,.2,1; .4,0,.2,1; .4,0,.2,1"
+                  path="M 30,162 L 30,108 Q 30,96 42,96 L 96,96 Q 108,96 108,84 L 108,56 Q 108,44 120,44 L 192,44 Q 204,44 204,56 L 204,88 Q 204,96 216,96 L 258,96 Q 270,96 270,84 L 270,36 Q 270,28 278,28 L 324,28"/>
+              </circle>
+
+              <!-- ── Origin pin A ── -->
+              <circle cx="30" cy="162" r="9" fill="#FFD400" filter="url(#glow-yellow)"/>
+              <circle cx="30" cy="162" r="9" fill="none" stroke="#FFD400" stroke-width="1" opacity=".4">
+                <animate attributeName="r" values="9;17;9" dur="2.2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values=".4;0;.4" dur="2.2s" repeatCount="indefinite"/>
+              </circle>
+              <text x="30" y="166" fill="#1A1A1A" font-size="8" font-family="Inter,sans-serif" text-anchor="middle" font-weight="900">A</text>
+
+              <!-- ── Destination pin B ── -->
+              <circle cx="324" cy="28" r="9" fill="rgba(165,40,255,.9)" filter="url(#glow-purple)" opacity="0" id="nav-pin-b"/>
+              <circle cx="324" cy="28" r="9" fill="none" stroke="#fff" stroke-width="1" opacity="0" id="nav-pin-b-ring">
+                <animate attributeName="r" values="9;18;9" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values=".35;0;.35" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <text x="324" y="32" fill="#fff" font-size="8" font-family="Inter,sans-serif" text-anchor="middle" font-weight="900" opacity="0" id="nav-pin-b-txt">B</text>
+
+              <!-- ── ETA chip (appears at end) ── -->
+              <g id="nav-eta" opacity="0" transform="translate(290,52)">
+                <rect x="-28" y="-11" width="56" height="22" rx="11" fill="#FFD400"/>
+                <text x="0" y="4" fill="#1A1A1A" font-size="8" font-family="Inter,sans-serif" text-anchor="middle" font-weight="800">✓ 2 min</text>
+              </g>
+
+              <!-- ── AR scan-line overlay ── -->
+              <rect class="nav-scanline" x="0" y="-200" width="360" height="200"
+                fill="url(#nav-scan-grad)" opacity=".12" clip-path="url(#scan-clip)"/>
+              <defs>
+                <linearGradient id="nav-scan-grad" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stop-color="rgba(165,40,255,0)"/>
+                  <stop offset="45%" stop-color="rgba(165,40,255,.6)"/>
+                  <stop offset="55%" stop-color="rgba(255,255,255,.4)"/>
+                  <stop offset="100%" stop-color="rgba(165,40,255,0)"/>
+                </linearGradient>
+              </defs>
+            </svg>
           </div>
           <div class="future">
             <div class="label">⚡ Expansão futura</div>
@@ -928,7 +1210,7 @@
         </div>
       </div>
 
-      <span class="pill dark" style="margin-bottom:32px;"><span class="dot"></span> Fim · Obrigado</span>
+      <span class="pill dark" style="margin-bottom:56px;"><span class="dot"></span> Fim · Obrigado</span>
       <div class="tagbig">Viajar muda<br/>a gente.</div>
       <div class="sub">3 problemas mapeados. 3 soluções desenhadas. Vamos transformar a jornada do passageiro nos terminais brasileiros.</div>
 
@@ -972,6 +1254,7 @@
     slides.forEach((s, idx) => s.classList.toggle('active', idx === i));
     dotEls.forEach((d, idx) => d.classList.toggle('active', idx === i));
     cur.textContent = i + 1;
+    runTickers(slides[i]);
   }
   document.getElementById('prev').addEventListener('click', () => go(i - 1));
   document.getElementById('next').addEventListener('click', () => go(i + 1));
@@ -981,6 +1264,140 @@
     if (e.key === 'Home') { go(0); }
     if (e.key === 'End') { go(slides.length - 1); }
   });
+
+  /* ===== MagicUI-inspired interactions ===== */
+  /* Spotlight: track pointer over cards and set --mx/--my */
+  const SPOT_SEL = '.vcard, .scen, .lead-card, .a11y-card';
+  document.querySelectorAll(SPOT_SEL).forEach(card => {
+    card.addEventListener('pointermove', (e) => {
+      const r = card.getBoundingClientRect();
+      card.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+      card.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+    card.addEventListener('pointerleave', () => {
+      card.style.setProperty('--mx', '50%');
+      card.style.setProperty('--my', '50%');
+    });
+  });
+
+  /* NumberTicker: animate data-ticker elements when their slide activates */
+  function runTickers(slideEl) {
+    if (!slideEl) return;
+    slideEl.querySelectorAll('[data-ticker]').forEach(el => {
+      if (el.dataset.tickerDone === '1') {
+        el.textContent = el.dataset.tickerFinal;
+        return;
+      }
+      const target = parseFloat(el.dataset.ticker);
+      const decimals = parseInt(el.dataset.decimals || '0', 10);
+      const prefix = el.dataset.prefix || '';
+      const suffix = el.dataset.suffix || '';
+      const dur = 1200;
+      const start = performance.now();
+      const ease = t => 1 - Math.pow(1 - t, 3);
+      function frame(now) {
+        const t = Math.min(1, (now - start) / dur);
+        const v = target * ease(t);
+        el.textContent = prefix + v.toFixed(decimals) + suffix;
+        if (t < 1) requestAnimationFrame(frame);
+        else {
+          el.dataset.tickerDone = '1';
+          el.dataset.tickerFinal = prefix + target.toFixed(decimals) + suffix;
+        }
+      }
+      requestAnimationFrame(frame);
+    });
+  }
+  /* Fire on first paint for slide 1 */
+  runTickers(slides[0]);
+
+  /* ===== Slide 9 — A→B navigation animation ===== */
+  let navPlayed = false;
+  const NAV_SLIDE_IDX = 8; // 0-based, slide 9
+
+  function playNavAnimation() {
+    if (navPlayed) return;
+    navPlayed = true;
+
+    const route     = document.getElementById('nav-route');
+    const dot       = document.getElementById('nav-dot');
+    const motion    = document.getElementById('nav-motion');
+    const pinB      = document.getElementById('nav-pin-b');
+    const pinBRing  = document.getElementById('nav-pin-b-ring');
+    const pinBTxt   = document.getElementById('nav-pin-b-txt');
+    const eta       = document.getElementById('nav-eta');
+    const wps       = document.querySelectorAll('.nav-wp');
+    const ghostPath = route.nextElementSibling; // dim trail behind glow path
+
+    if (!route || !dot) return;
+
+    const TOTAL_LEN = 600;
+    const DRAW_DUR  = 3200; // ms to draw the route
+    const start     = performance.now();
+
+    // Ease function for route draw
+    const easeInOut = t => t < .5 ? 2*t*t : -1+(4-2*t)*t;
+
+    function drawFrame(now) {
+      const t   = Math.min(1, (now - start) / DRAW_DUR);
+      const et  = easeInOut(t);
+      const off = TOTAL_LEN * (1 - et);
+      route.setAttribute('stroke-dashoffset', off);
+      if (ghostPath && ghostPath.hasAttribute('stroke-dashoffset'))
+        ghostPath.setAttribute('stroke-dashoffset', off);
+
+      // Show waypoints at ~25%, 45%, 65% of draw
+      if (t > .22 && wps[0]) wps[0].style.opacity = '1';
+      if (t > .44 && wps[1]) wps[1].style.opacity = '1';
+      if (t > .66 && wps[2]) wps[2].style.opacity = '1';
+
+      if (t < 1) {
+        requestAnimationFrame(drawFrame);
+      } else {
+        // Route fully drawn — reveal pin B
+        pinB.setAttribute('opacity', '1');
+        pinBTxt.setAttribute('opacity', '1');
+        pinBRing.setAttribute('opacity', '1');
+
+        // Launch traveler dot after short pause
+        setTimeout(() => {
+          dot.setAttribute('r', '5.5');
+          dot.setAttribute('opacity', '1');
+          motion.setAttribute('begin', 'indefinite');
+          motion.beginElement();
+
+          // After dot reaches end, show ETA chip
+          setTimeout(() => {
+            animFade(eta, 0, 1, 350);
+            // Pulse ETA
+            setTimeout(() => {
+              eta.style.animation = 'nav-eta-bounce .4s cubic-bezier(.2,.7,.2,1)';
+            }, 100);
+          }, 4100);
+        }, 200);
+      }
+    }
+    requestAnimationFrame(drawFrame);
+  }
+
+  // Utility: fade element opacity
+  function animFade(el, from, to, dur) {
+    const s = performance.now();
+    const fn = (now) => {
+      const t = Math.min(1, (now - s) / dur);
+      el.setAttribute('opacity', from + (to - from) * t);
+      if (t < 1) requestAnimationFrame(fn);
+    };
+    requestAnimationFrame(fn);
+  }
+
+  /* Hook into go() — reassign so existing closures pick up new version */
+  const _navOrigGo = go;
+  go = function(n) {
+    _navOrigGo(n);
+    const newIdx = ((n % slides.length) + slides.length) % slides.length;
+    if (newIdx === NAV_SLIDE_IDX) setTimeout(playNavAnimation, 500);
+  };
 </script>
 </body>
 </html>
